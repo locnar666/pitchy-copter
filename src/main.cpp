@@ -82,8 +82,8 @@ int main(int argc, char *argv[])
         //Affichage map
         window.draw(tileMap);
 
-        //Affichage Sprit
-        joueur.drawBaby(window);
+        //Affichage Sprite
+        window.draw(joueur);
 
         sf::View currentView = window.getView();
 

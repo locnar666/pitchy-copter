@@ -4,6 +4,7 @@
 using namespace std;
 using namespace sf;
 
+
 //Constructeur
 Helico::Helico(int axeHelicox, int axeHelicoy) : m_axeHelicox(axeHelicox), m_axeHelicoy(axeHelicoy)
 {
@@ -13,16 +14,12 @@ Helico::Helico(int axeHelicox, int axeHelicoy) : m_axeHelicox(axeHelicox), m_axe
     if (!BabyTexture.loadFromFile("images/BabyCopter.png"))
     {
     // Erreur
-    cout << "Erreur durant le chargement de l'image de Baby Copter." << endl;
+        cout << "Erreur durant le chargement de l'image de Baby Copter." << endl;
     }
     else
-    this->setTexture(BabyTexture);
-    this->setPosition(m_axeHelicox, m_axeHelicoy);
-}
+        this->setTexture(BabyTexture);
 
-Helico::~Helico()
-{
-    //dtor
+    this->setPosition(m_axeHelicox, m_axeHelicoy);
 }
 
 void Helico::Vie()
@@ -33,16 +30,11 @@ void Helico::Vie()
         if (!BabyTexture.loadFromFile("images/Mort.png"))
         {
         // Erreur
-        cout << "Erreur durant le chargement de l'image de Baby Copter." << endl;
+            cout << "Erreur durant le chargement de l'image de Baby Copter." << endl;
         }
         else
-        this->setTexture(BabyTexture);
+            this->setTexture(BabyTexture);
     }
-}
-
-void Helico::drawBaby(RenderWindow &window)
-{
-    window.draw(*this);
 }
 
 void Helico::MoveY(sf::RenderWindow &window)
@@ -51,7 +43,6 @@ void Helico::MoveY(sf::RenderWindow &window)
 
     //m_axeHelicox +1 pour bouger avec la camera, pour le moment (temporaire)
     this->setPosition(m_axeHelicox+=1, m_axeHelicoy += 4);
-
 
     //Trouver moyen de mettre l"Event" dans le main...
     while (window.pollEvent(event))

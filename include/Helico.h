@@ -19,14 +19,9 @@ class Helico : public sf::Sprite
         //Constructeur
         Helico(int axeHelicox, int axeHelicoy);
 
-        //Destructeur
-        virtual ~Helico();
-
         //Fonctions
-        // virtual void draw(sf::RenderTarget&, sf::RenderStates states) const;
         void Vie();
         void MoveY(sf::RenderWindow &window);
-        void drawBaby(sf::RenderWindow &window);
 
     private:
         //Variables de la classe en accès privé
