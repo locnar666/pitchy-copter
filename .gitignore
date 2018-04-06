@@ -1,4 +1,7 @@
-*.layout
-*.depend
-obj/
 bin/
+
+doc/
+obj/
+*.depend
+
+*.layout

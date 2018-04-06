@@ -12,7 +12,9 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++11" />
 					<Add option="-g" />
+					<Add directory="." />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -45,14 +47,20 @@
 		<Linker>
 			<Add directory="C:/Program Files/SFML-2.4.2/lib" />
 		</Linker>
+		<Unit filename="include/GameOver.h" />
 		<Unit filename="include/Helico.h" />
-		<Unit filename="include/Obstacle.h" />
-		<Unit filename="include/input.h" />
+		<Unit filename="include/Jeu.h" />
+		<Unit filename="include/Menu.h" />
+		<Unit filename="include/Pause.h" />
+		<Unit filename="include/Score.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="include/map.h" />
+		<Unit filename="src/GameOver.cpp" />
 		<Unit filename="src/Helico.cpp" />
-		<Unit filename="src/Obstacle.cpp" />
-		<Unit filename="src/input.cpp" />
+		<Unit filename="src/Jeu.cpp" />
+		<Unit filename="src/Menu.cpp" />
+		<Unit filename="src/Pause.cpp" />
+		<Unit filename="src/Score.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/map.cpp" />
 		<Extensions>
