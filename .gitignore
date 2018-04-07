@@ -1,7 +1,5 @@
 bin/
-
 doc/
 obj/
 *.depend
-
 *.layout
