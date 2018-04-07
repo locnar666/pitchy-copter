@@ -13,15 +13,11 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-std=c++11" />
 					<Add option="-g" />
-					<Add directory="." />
-					<Add directory="include" />
+					<Add option="-DSFML_STATIC" />
 				</Compiler>
 				<Linker>
-					<Add library="sfml-graphics-d" />
-					<Add library="sfml-window-d" />
-					<Add library="sfml-system-d" />
+					<Add directory="./extlibs/SFML/lib" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -43,10 +39,16 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="C:/Program Files/SFML-2.4.2/include" />
+			<Add directory="." />
+			<Add directory="./extlibs/SFML/include" />
 		</Compiler>
 		<Linker>
-			<Add directory="C:/Program Files/SFML-2.4.2/lib" />
+			<Add library="sfml-main" />
+			<Add library="sfml-system" />
+			<Add library="sfml-window" />
+			<Add library="sfml-graphics" />
+			<Add library="sfml-audio" />
+			<Add directory="./extlibs/SFML/lib" />
 		</Linker>
 		<Unit filename="include/DBPlayer.h">
 			<Option virtualFolder="headers/" />
