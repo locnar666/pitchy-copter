@@ -12,9 +12,9 @@
 
 Jeu::Jeu()
 : tile_map(this->joueur,
-           "images/TileSet/Middle_TileSet16X16.bmp",
+           "images/TileSet/Retest_Middle2_tileSet16x16.png",
            sf::Vector2u(16, 16),
-           800, 30),
+           1000, 30),
   window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16), GAME_TITLE)
 {
     this->window.setFramerateLimit(60);
@@ -25,7 +25,7 @@ Jeu::Jeu()
     camera.reset(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)); // Largeur map == nbTiles *32
 }
 
-void Jeu::check_etat() // !! TEMPORAIRE
+void Jeu::check_etat()
 {
     switch (m_etat)
     {
@@ -33,7 +33,58 @@ void Jeu::check_etat() // !! TEMPORAIRE
         case (jouer_jeu): this->lancer();             // case 1
         case (pause): this->menuPause();              // case 2
         case (game_over): this->gameOver();           // case 3
+        case (option): this->menu_option();           // case 4
+        case (nomJoueur): this->entrerNom();          // case 5
     }
+}
+
+void Jeu::menu_option()
+{
+    float camera_X = (camera.getCenter().x - (SCREEN_WIDTH/2));
+    float camera_Y = (camera.getCenter().y - (SCREEN_HEIGHT/2));
+
+    Option e_option(window.getSize().x, window.getSize().y, camera_X, camera_Y);
+
+    while (window.isOpen())
+    {
+        while(window.pollEvent(event))
+        {
+            sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+            e_option.getPosition(localPosition);
+
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    if (e_option.getPosition(localPosition) == 0 ||
+                        e_option.getPosition(localPosition) == 1)
+                    {
+                        bool test = e_option.changeEtatMusique();
+                        if (test == false)
+                        {
+                            jouer_zic = false;
+                        }
+                        else
+                        {
+                            jouer_zic = true;
+                        }
+                    }
+                    if (e_option.getPosition(localPosition) == 2)
+                    {
+                        m_etat = 0;
+                        this->check_etat();
+                    } // Quitte le jeu...
+                }
+            }
+        }
+
+        this->window.clear();
+
+        e_option.draw(window);
+
+        this->window.display();
+    }
+
 }
 
 void Jeu::menuPrincipal()
@@ -43,11 +94,10 @@ void Jeu::menuPrincipal()
 
     Menu menu(window.getSize().x, window.getSize().y, camera_X, camera_Y);
 
-    if (retour_au_menu){ //replace le joueur au début du niveau...
-    //réinitialisation de la camera
-    camera.reset(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
-    this->joueur.setPosition(50, 10); // Largeur map == nbTiles *32
-    this->temps_score.setPosition(630, 10);
+    if (retour_au_menu)
+    {   //replace le joueur au début du niveau...
+        this->joueur.setPosition(50, 10); // Largeur map == nbTiles *32
+        this->temps_score.setPosition(630, 10);
     }
 
     while (window.isOpen())
@@ -61,23 +111,31 @@ void Jeu::menuPrincipal()
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    if (menu.getPosition(localPosition) == 0){
-                    m_etat = 1;
-                    this->check_etat();}
-                    if (menu.getPosition(localPosition) == 1){
+                    if (menu.getPosition(localPosition) == 0)
+                    {
+                        //jouer
+                        m_etat = 1;
+                        this->check_etat();
+                    }
+                    if (menu.getPosition(localPosition) == 1)
+                    {
+                        m_etat = 4;
+                        this->check_etat();
                     }// Affiche les options;
-                    if (menu.getPosition(localPosition) == 2){
-                    exit(0);} // Quitte le jeu...
+                    if (menu.getPosition(localPosition) == 2)
+                    {
+                    exit(0);
+                    } // Quitte le jeu...
                 }
             }
         }
-        window.clear();
+        this->window.clear();
         menu.draw(window);
-        window.display();
+        this->window.display();
     }
 }
 
-void Jeu::menuPause() // !!!!!!!!!!!!!!!!-> Score qui continu à tourner apres menu pause <-!!!!!!!!!!!!!!!!!!
+void Jeu::menuPause()
 {
     float camera_X = (camera.getCenter().x - (SCREEN_WIDTH/2));
     float camera_Y = (camera.getCenter().y - (SCREEN_HEIGHT/2));
@@ -93,7 +151,6 @@ void Jeu::menuPause() // !!!!!!!!!!!!!!!!-> Score qui continu à tourner apres me
                 if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                 {
                     menu_pause = false;
-                    std::cout << "je quitte le menu pause" << std::endl;
                     m_etat = 1;
                     this->check_etat();
                 }
@@ -109,6 +166,7 @@ void Jeu::menuPause() // !!!!!!!!!!!!!!!!-> Score qui continu à tourner apres me
                         m_etat = 0;
                         utilise_pause = false;
                         retour_au_menu = true; //reinitialise le jeu...
+
                         this->check_etat();}// menu principal
                         if (e_pause.getPosition(localPosition) == 1){
                         }// Affiche les options;
@@ -124,7 +182,7 @@ void Jeu::menuPause() // !!!!!!!!!!!!!!!!-> Score qui continu à tourner apres me
         this->window.draw(this->joueur);
         this->window.draw(this->temps_score);
 
-        e_pause.draw(window);
+        e_pause.draw(window);//dessine un rectangle en transparence
 
         this->window.display();
         }
@@ -133,13 +191,16 @@ void Jeu::menuPause() // !!!!!!!!!!!!!!!!-> Score qui continu à tourner apres me
 
 void Jeu::gameOver()
 {
+
     float camera_X = (camera.getCenter().x - (SCREEN_WIDTH/2));
     float camera_Y = (camera.getCenter().y - (SCREEN_HEIGHT/2));
 
     GameOver e_gameOver(window.getSize().x, window.getSize().y, camera_X, camera_Y);
 
+
     while(window.isOpen())
     {
+
         while (window.pollEvent(event))
         {
             sf::Vector2i localPosition = sf::Mouse::getPosition(window);
@@ -154,6 +215,7 @@ void Jeu::gameOver()
                         m_etat = 0;
                         retour_au_menu = true;
                         estMort = false;
+                        this->temps_score.setCharacterSize(20);
                         this->joueur.recommence();
                         this->check_etat();
                     }
@@ -163,59 +225,256 @@ void Jeu::gameOver()
                     }
                 }
             }
+        }
+
+        //******************* highScore *****************************
+        joueurs = bdd.getAllPlayers();
+
+
+        sf::Font font;
+        sf::Text tableauScore[10];
+
+        if (font.loadFromFile("images/Polices/ariblk.ttf"))
+        {
+            // Gestion erreur
+        }
+
+        std::stringstream ss[10];
+        std::string tabJoueurs[10];
+
+        for (int i = 0; i <= 9; i++)
+        {
+
+            //Convertir Float en String
+            float scoreJoueur = (*joueurs)[i]->score;
+            std::ostringstream tempsScore;
+            tempsScore << scoreJoueur;
+
+            ss[i] << i +1 << " /. " <<  (*joueurs)[i]->nom << " -> " <<tempsScore.str();
+
+            tabJoueurs[i] = ss[i].str();
+
+            tableauScore[i].setFont(font);
+            tableauScore[i].setColor(sf::Color::Green);
+            tableauScore[i].setString(tabJoueurs[i]);
+            tableauScore[i].setCharacterSize(18);
+            tableauScore[i].setPosition(sf::Vector2f(camera_X + (window.getSize().x/1.4), window.getSize().y / (9+1) *(i)));
+        }
+
+        this->temps_score.setCharacterSize(30);
+
+        //repositionne le score en dessous du gameover
+        this->temps_score.setPosition(sf::Vector2f(camera_X + (window.getSize().x/7), window.getSize().y / (3 + 1) *1));
+
         this->window.clear();
-        //la couche "GameOver" est la derniere à etre dessinée
+
         this->window.draw(this->tile_map);
         this->window.draw(this->joueur);
-        this->window.draw(this->temps_score);
 
+
+        //la couche "GameOver" est la derniere à etre dessinée
         e_gameOver.draw(window);
 
+        //Affiche liste des highscore
+        for (int j = 0; j < 10; j++)
+        {
+            this->window.draw(tableauScore[j]);
+        }
+
+
+        this->window.draw(this->temps_score);
+
+
         this->window.display();
+    }
+}
+
+
+void Jeu::entrerNom()
+{
+
+    float camera_X = (camera.getCenter().x - (SCREEN_WIDTH/2));
+    float camera_Y = (camera.getCenter().y - (SCREEN_HEIGHT/2));
+
+    sf::Text nom;
+    sf::Text votreNom;
+    sf::Font font;
+
+    if (font.loadFromFile("images/Polices/ariblk.ttf"))
+    {
+        // Gestion erreur
+    }
+    nom.setFont(font);
+    votreNom.setFont(font);
+
+    nom.setColor(sf::Color::Green);
+    nom.setCharacterSize(18);
+    nom.setPosition(sf::Vector2f(camera_X + (window.getSize().x/2.5), window.getSize().y / 2 *(1)));
+
+    votreNom.setString("Entrez votre nom: ");
+    votreNom.setColor(sf::Color::Green);
+    votreNom.setCharacterSize(18);
+    votreNom.setPosition(sf::Vector2f(camera_X + (window.getSize().x/20), window.getSize().y / 2 *(1)));
+
+    this->window.clear();
+    this->window.draw(votreNom);
+    this->window.display();
+
+
+    while(window.isOpen())
+    {
+
+        while (window.pollEvent(event))
+        {
+
+            if (event.type == sf::Event::TextEntered)
+            {
+                if (event.text.unicode < 128)
+                {
+                    nom_joueur += event.text.unicode;
+
+                    nom.setString(nom_joueur);
+
+                    this->window.clear();
+
+                    this->window.draw(nom);
+                    this->window.draw(votreNom);
+
+                    this->window.display();
+                }
+            }
+            if (event.type == sf::Event::KeyPressed)
+            {
+                if (event.key.code == sf::Keyboard::Return)
+                {
+                    camera.reset(sf::FloatRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+                    m_etat = 1;
+                    utilise_pause = true;
+                    this->check_etat();
+                }
+            }
         }
     }
 }
 
 void Jeu::lancer()
 {
+    //initialisation musique/bruitage
+    Son zic;
+
+    //Place Background au début du jeu
+    this->background.setPosition(sf::Vector2f(0, 0));
+
+    //Ouvre la base de données
+    this->bdd.openDatabase();
+
     //descente automatique du joueur
     bool joueur_descend = true;
 
     if (!utilise_pause)
     {
+        m_etat = 5;
+        nom_joueur = "";
         this->temps_score.restart();
+        //this->window.clear();
+        this->check_etat();
     }
+
     utilise_pause = false;
 
     while(window.isOpen())
     {
+        if (jouer_zic)
+        zic.playSonDescend();
 
-        this->temps_score.getTime();
-        this->joueur.move(X_SPEED, Y_SPEED_DOWN);
+        //*********** Augmentation vitesse joueur en fonction du score **************
+        float score = this->temps_score.getTime();
 
-        //Gestion caméra
-        camera.move(X_SPEED, 0);
-        window.setView(camera);
+        background.move(1,0);
 
-        //Gestion collision en fonction du N° de la Tuile -> n° <= 4 == death
+        if (score < 2500)
+        {
+            this->joueur.move(X_SPEED, Y_SPEED_DOWN);
+            this->temps_score.move(X_SPEED, 0);
+
+            //Gestion caméra
+            camera.move(X_SPEED, 0);
+            window.setView(camera);
+        }
+        else if((score > 2500) && (score < 5000))
+        {
+            this->joueur.move(X_SPEED +1, Y_SPEED_DOWN);
+            this->temps_score.move(X_SPEED+1, 0);
+
+            camera.move(X_SPEED +1, 0);
+            window.setView(camera);
+        }
+        else if (score > 5000)
+        {
+            this->joueur.move(X_SPEED +2, Y_SPEED_DOWN);
+            this->temps_score.move(X_SPEED+2, 0);
+
+            camera.move(X_SPEED +2, 0);
+            window.setView(camera);
+        }
+
+        //Gestion collision en fonction du N° de la Tuile -> n°5 || 10 -> 20 || 25 == death
         if (this->tile_map.indiceTile())
         {
-            std::cout << "dead" << std::endl;
             estMort = true;
-            m_etat = 3;
-            this->joueur.estMort();
-            //this->temps_score.stopTime();
+            m_etat = 3; //revoie à "game over"
+
+            this->joueur.estMort(); //sprit joueur mort
+
+            //si musique activée
+            if (jouer_zic)
+            zic.playSonMort();
+
+            //récupération du score
             this->temps_score.getTime();
+
+
+            //travail sur BdD
+            this->bdd.executeQuery("CREATE TABLE IF NOT EXISTS players (nom TEXT, score DOUBLE)");
+
+            //this->bdd.insertPlayer(nom_joueur, score);
+
+            //récupération des 10 HighScores
+            joueurs = bdd.getAllPlayers();
+
+            for (int i=0; i<joueurs->size(); i++)
+            {
+                // condition: recuperer scores joueur, si score actuel > au plus bas des 10 score alors:
+                if (score >(*joueurs)[i]->score)
+                {
+                    this->bdd.insertPlayer(nom_joueur, score);
+                    //Si insertion, alors suppression du 10eme
+                    if ((joueurs->size()== 10))
+                    {
+                        int id_joueur_supp = (*joueurs)[9]->id;
+                        this->bdd.deletePlayer(id_joueur_supp);
+                    }
+                    break;
+                }
+            }
+
+
+            //m_etat = 3 -> GameOver
             this->check_etat();
         }
 
         while(window.pollEvent(event))
         {
+            if (jouer_zic)
+            zic.playSonDescend();
+
             //Mouvement joueur
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
+                    if (jouer_zic)
+                    zic.playSonMonte();
                     joueur_descend = false;
                 }
             } else if(event.type == sf::Event::MouseButtonReleased)
@@ -229,7 +488,6 @@ void Jeu::lancer()
                 m_etat = 2;
                 menu_pause = true;
                 utilise_pause = true; // gestion du score - evite de restart apres une pause
-                this->temps_score.stopTime();
                 this->check_etat();
             }
         }
@@ -239,55 +497,16 @@ void Jeu::lancer()
         //mouvement
         this->joueur.move(0, Y_SPEED_UP);
         }
-        this->temps_score.move(X_SPEED, 0);
 
-        //sf::View currentView = window.getView();
-
-        // std::cout << this->joueur.getPosition().x << ", " << this->joueur.getPosition().y << std::endl;
         this->window.clear();
 
-
+        this->window.draw(background);
         this->window.draw(this->tile_map);
         this->window.draw(this->joueur);
         this->window.draw(this->temps_score);
-
 
         this->window.display();
 
     }
 }
-/*
-#include <iostream>
-#include "database.h"
-#include <vector>
-#include "produit.h"
-
-using namespace std;
-
-int main()
-{
-    database bdd;
-    bdd.openDatabase();
-
-    bdd.executeQuery("CREATE TABLE IF NOT EXISTS joueurs (nom TEXT, score FLOAT)");
-    //bdd.insertProduit("Banane", 1.3, 10);
-    //bdd.insertProduit("Avocat", 2.5, 1);
-    //bdd.insertProduit("Tomate", 1., 666);
-
-    std::vector<Produit*>* produits = bdd.getAllProduits();
-    for (int i=0; i<produits->size(); i++)
-    {
-        std::cout << (*produits)[i]->nom << " " << (*produits)[i]->prix << std::endl;
-    }
-
-    (*produits)[0]->nom = "Toto";
-    bdd.updateProduit((*produits)[0]);
-
-    bdd.deleteProduit((*produits)[0]->id);
-
-    bdd.closeDatabase();
-
-    return 0;
-}*/
-
 

@@ -3,6 +3,8 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <include/DataBase.h>
+#include <include/DBPlayer.h>
 
 #include <iostream>
 #include <string>
@@ -10,10 +12,10 @@
 
 /*!
  * \class Score
- * \brief Creation du systeme de score (compte en seconde)
+ * \brief Creation du systeme de score (compte en pixels)
  * \date 06 avril 2018
  *
- * \brief Gestion de l'horloge qui fera office tableau des scores (chaque seconde = un point)
+ * \brief Gestion du score
  *
  */
 
@@ -22,29 +24,28 @@ class Score : public sf::Text
     public:
         Score();
         /*!
-         * \brief Récupère le temps depuis le lancement de la partie et le converti en string pour affichage text
+         * \brief recupere le score
         */
-        void getTime();
+        float getTime();
+
         /*!
-         * \brief Stop le temps (pause)
-        */
-        void stopTime();
-        /*!
-         * \brief Redemarre le temps (score) ex: nouvelle partie
+         * \brief Reinitialise le score à 0
         */
         void restart();
+
+
+
 
     protected:
 
     private:
-        sf::Clock horloge;
-        sf::Time temps_ecoule = sf::milliseconds(10);
+
         sf::Font police;
 
-        std::string message;
-        std::string nv_message;
+        float m_score;
 
-        bool pauseScore = false;
+        std::string message;
+
 };
 
 #endif // SCORE_H

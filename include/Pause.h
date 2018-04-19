@@ -31,7 +31,7 @@ class Pause
 
         /*!
          * \brief Dessine un rectangle avec transparence puis le text par dessus
-         * \param window fenêtre de rendu SFML
+         * \param window fenetre de rendu SFML
         */
         void draw(sf::RenderWindow &window);
         /*!

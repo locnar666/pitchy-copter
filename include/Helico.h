@@ -14,7 +14,7 @@
 
 /*!
  * \class Helico
- * \brief Représentation de l'hélicoptère.
+ * \brief Representation de l'helicoptere.
  * \date 06 avril 2018
  *
  * \brief Permet de creer le sprit joueur vivant en début de partie puis de changer le sprit en
@@ -39,7 +39,7 @@ class Helico : public sf::Sprite
         void recommence();
         /*!
          * \brief Bouger sur l'axe Y
-         * \param window Fenêtre de rendu SFML
+         * \param window Fenetre de rendu SFML
         */
         void MoveY(sf::RenderWindow &window);
 

@@ -6,7 +6,7 @@
 Map::Map(Helico& helico, const char *tileset_filename, sf::Vector2u tileSize, unsigned int width, unsigned int height)
 : joueur(helico)
 {
-   std::ifstream map_stream("Map/Carte_FinalVersion.txt"); //Map/Carte_middle_tiles.txt
+   std::ifstream map_stream("Map/test_Presentatio.txt"); //Map/Carte_middle_tiles.txt
    std::vector<int> tiles(std::istream_iterator<int>(map_stream),
                           std::istream_iterator<int>{});
 
@@ -23,7 +23,7 @@ Map::Map(Helico& helico, const char *tileset_filename, sf::Vector2u tileSize, un
         for(unsigned int j=0; j < height; ++j)
         {
             // on récupère le numéro de la tuile courante
-            this->tileNumber = tiles[i + j * width];
+            this->tileNumber = (tiles[i + j * width]) ;
 
             //std::cout << tileNumber << std::endl;
 
@@ -70,8 +70,8 @@ bool Map::indiceTile()
         for (int j = ymin; j <= ymax; ++j)
         {
             // on récupère le numéro de tuile courant
-            tileNumber = tabTile[i + j * 800]; // 100 = Largeur map
-            if (tileNumber == 4)
+            tileNumber = tabTile[i + j * 1000]; // 100 = Largeur map
+            if (tileNumber == 5 || (tileNumber >= 10 && tileNumber <= 20) || tileNumber == 25)
                 return true;
         }
     return false;

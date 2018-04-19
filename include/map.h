@@ -38,8 +38,8 @@ class Map : public sf::Drawable, public sf::Transformable
         */
         virtual void draw(sf::RenderTarget& target, sf::RenderStates state) const;
         /**
-        * \brief Gestion des collisions en recuperant le nombre correspondant à la tuile.
-        * \return vrai si Tuile considérée comme solide, faux sinon
+        * \brief Gestion des collisions en recuperant le nombre correspondant a la tuile.
+        * \return vrai si Tuile considéree comme solide, faux sinon
         */
         bool indiceTile();
 

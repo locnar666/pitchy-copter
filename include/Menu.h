@@ -24,8 +24,8 @@ class Menu
          * \brief Creation du menu
          * \param largeur pour la taille x de la fenetre
          * \param hauteur pour la taille y de la fenetre
-         * \param posiX pour la position x de la caméra
-         * \param posiY pour la position y de la caméra
+         * \param posiX pour la position x de la camera
+         * \param posiY pour la position y de la camera
         */
         Menu(float largeur, float hauteur, float posiX, float posiY);
 
@@ -45,8 +45,6 @@ class Menu
         */
         float getPosition(sf::Vector2i positionSouris);
 
-        //void mouvement();
-        //void selectionItem();
 
     protected:
 

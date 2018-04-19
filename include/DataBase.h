@@ -4,21 +4,53 @@
 #include <sqlite3.h>
 #include <string>
 #include <vector>
-#include "DBPlayer.h"
+#include <sstream>
 
-class database
+#include "DBPlayer.h"
+/*!
+ * \class DataBase
+ * \brief Creation et interaction avec une bdd sous sqlite
+ * \date 19 avril 2018
+ *
+ * \brief Creer/edite une bdd
+ *
+ */
+
+
+class DataBase
 {
     public:
-        database();
-        virtual ~database();
-
+        DataBase();
+        virtual ~DataBase();
+        /*!
+         * \brief ouvre la base de donnees
+        */
         void openDatabase();
+        /*!
+         * \brief ferme la base de donnees
+        */
         void closeDatabase();
+        /*!
+         * \brief execute la requete
+         * \param query requete
+        */
         bool executeQuery(std::string query);
-
+        /*!
+         * \brief insert un nouveau joueur
+         * \param nom nom du joueur
+         * \param score score du joueur
+        */
         bool insertPlayer(std::string nom, float score);
-        std::vector<DBPlayer*> getAllPlayers();
-        bool updatePlayer(DBPlayer* player);
+
+        /*!
+         * \brief tableau dynamique qui va rechercher et stocker les joueurs
+        */
+        std::vector<DBPlayer*>* getAllPlayers();
+
+        /*!
+         * \brief suppression joueur
+         * \param id id du joueur
+        */
         bool deletePlayer(int id);
 
     protected:

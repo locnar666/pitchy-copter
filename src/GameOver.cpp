@@ -16,17 +16,17 @@ GameOver::GameOver(float largeur, float hauteur, float posiX, float posiY)
     m_gameOver[0].setColor(sf::Color::Red);
     m_gameOver[0].setCharacterSize(68);
     m_gameOver[0].setString("Game Over");
-    m_gameOver[0].setPosition(sf::Vector2f(posiX + (largeur/4), hauteur / (Max_GameOver_Items + 1) *0.35));
+    m_gameOver[0].setPosition(sf::Vector2f(posiX + (largeur/8), hauteur / (Max_GameOver_Items + 1) *0.35));
 
     m_gameOver[1].setFont(font);
     m_gameOver[1].setColor(sf::Color::Black);
     m_gameOver[1].setString("Menu principal");
-    m_gameOver[1].setPosition(sf::Vector2f(posiX + (largeur/3), hauteur / (Max_GameOver_Items + 1) *2));
+    m_gameOver[1].setPosition(sf::Vector2f(posiX + (largeur/7), hauteur / (Max_GameOver_Items + 1) *2));
 
     m_gameOver[2].setFont(font);
     m_gameOver[2].setColor(sf::Color::Black);
     m_gameOver[2].setString("Quitter");
-    m_gameOver[2].setPosition(sf::Vector2f(posiX + (largeur/3), hauteur / (Max_GameOver_Items + 1) *2.75));
+    m_gameOver[2].setPosition(sf::Vector2f(posiX + (largeur/7), hauteur / (Max_GameOver_Items + 1) *2.75));
 
     itemSelection = 1;
 }

@@ -3,30 +3,30 @@
 #include <iostream>
 #include <stdio.h>
 
-database::database()
+DataBase::DataBase()
 {
     //ctor
     dbfile = "./Pitchy-copter_database.db";
 }
 
-database::~database()
+DataBase::~DataBase()
 {
     //dtor
 }
 
-void database::openDatabase()
+void DataBase::openDatabase()
 {
     sqlite3_initialize();
     sqlite3_open(dbfile.c_str(), &db);
 }
 
-void database::closeDatabase()
+void DataBase::closeDatabase()
 {
     sqlite3_close_v2(db);
     sqlite3_shutdown();
 }
 
-bool database::executeQuery(std::string query)
+bool DataBase::executeQuery(std::string query)
 {
     char * errmsg = 0;
     if (sqlite3_exec(db, query.c_str(), NULL, 0, &errmsg)!= SQLITE_OK)
@@ -40,30 +40,27 @@ bool database::executeQuery(std::string query)
     }
 }
 
-bool database::insertPlayer(std::string nom, float score)
+bool DataBase::insertPlayer(std::string nom, float score)
 {
-    char bprix[10];
-    char bqtevendue[10];
-    sprintf(bprix, "%f", prix);
-    sprintf(bqtevendue, "%d", qtevendue);
+    std::ostringstream temps;
+    temps << score;
+    std::string scoreBDD = temps.str();
 
-    std::string query = "INSERT INTO produits VALUES('";
+    std::string query = "INSERT INTO players VALUES('";
     query += nom;
-    query += "',";
-    query += bprix;
-    query += ",";
-    query += bqtevendue;
-    query += ")";
+    query += "', '";
+    query += scoreBDD;
+    query += "')";
 
     std::cout << query << std::endl;
 
     return executeQuery(query);
 }
 
-std::vector<DBPlayer*> database::getAllPlayers()
+std::vector<DBPlayer*>* DataBase::getAllPlayers()
 {
-    std::string query = "SELECT rowid, * FROM players";
-    std::vector<DBPlayer*>;
+    std::string query = "SELECT rowid, * FROM players ORDER BY score DESC LIMIT 10";
+    std::vector<DBPlayer*>* players = new std::vector<DBPlayer*>;
     int i;
 
     sqlite3_stmt * stmt;
@@ -78,8 +75,7 @@ std::vector<DBPlayer*> database::getAllPlayers()
 
             player->id = sqlite3_column_int(stmt, 0);
             player->nom = (char*)sqlite3_column_text(stmt, 1);
-            player->prix = sqlite3_column_double(stmt, 2);
-            player->qtevendue = sqlite3_column_int(stmt, 3);
+            player->score = sqlite3_column_double(stmt, 2);
         }
     }
     while (i == SQLITE_ROW);
@@ -87,7 +83,7 @@ std::vector<DBPlayer*> database::getAllPlayers()
     return players;
 }
 
-bool database::updatePlayer(DBPlayer* player)
+/*bool database::updatePlayer(DBPlayer* player)
 {
     std::string query = "UPDATE players SET nom=?, prix=?, qtevendue=? WHERE rowid=?";
     sqlite3_stmt * stmt;
@@ -95,30 +91,26 @@ bool database::updatePlayer(DBPlayer* player)
 
     //Binds
     sqlite3_bind_text(stmt, 1, player->nom.c_str(), strlen(player->nom.c_str()), 0);
-    sqlite3_bind_double(stmt, 2, player->prix);
-    sqlite3_bind_int(stmt, 3, player->qtevendue);
-    sqlite3_bind_int(stmt, 4, player->id);
+    sqlite3_bind_double(stmt, 2, player->score);
+    sqlite3_bind_int(stmt, 3, player->id);
 
     //Execute
     sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 
     return true;
-}
+}*/
 
-bool database::deletePlayer(int id)
+bool DataBase::deletePlayer(int id)
 {
-    std::string query = "DELETE FROM produits WHERE rowid=?";
+    std::string query = "DELETE FROM players WHERE rowid=?";
     sqlite3_stmt * stmt;
-    if(sqlite3_prepare(db, "DELETE FROM produits" \
-                           "WHERE rowid=?",
-                    -1, &stmt, NULL) == SQLITE_OK)
-    {
-        sqlite3_bind_int(stmt, 1, id);
-        sqlite3_step(stmt);
-        sqlite3_finalize(stmt);
-        return true;
-    }
+    sqlite3_prepare_v2(db, query.c_str(), strlen(query.c_str())+1, &stmt, NULL);
 
-    return false;
+    //Bind
+    sqlite3_bind_int(stmt, 1, id);
+
+    //Execute
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }
