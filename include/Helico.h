@@ -12,31 +12,42 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-
+/*!
+ * \class Helico
+ * \brief Représentation de l'hélicoptère.
+ * \date 06 avril 2018
+ *
+ * \brief Permet de creer le sprit joueur vivant en début de partie puis de changer le sprit en
+ * joueur mort à la fin de celle ci. Une recharge est egalement effectuee lorsque le
+ * joueur recommence
+ *
+ */
 class Helico : public sf::Sprite
 {
     public:
         //Constructeur
-        Helico(int axeHelicox, int axeHelicoy);
-
-        //Destructeur
-        virtual ~Helico();
+        Helico();
 
         //Fonctions
-        // virtual void draw(sf::RenderTarget&, sf::RenderStates states) const;
-        void Vie();
+        /*!
+         * \brief Charge sprit joueur mort
+        */
+        void estMort();
+        /*!
+         * \brief Recharge sprit joueur de base
+        */
+        void recommence();
+        /*!
+         * \brief Bouger sur l'axe Y
+         * \param window Fenêtre de rendu SFML
+        */
         void MoveY(sf::RenderWindow &window);
-        void drawBaby(sf::RenderWindow &window);
 
     private:
         //Variables de la classe en accès privé
         sf::Texture BabyTexture;
 
-        int m_axeHelicox;
-        int m_axeHelicoy;
-
         bool m_enVie = true;
-        bool m_monte = false;
         //Map T_map;
 
 };

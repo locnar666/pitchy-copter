@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include <SFML/Graphics.hpp>
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -10,31 +11,47 @@
 
 #include "Helico.h"
 
+/*!
+ * \class Map
+ * \brief Creation de la TileMap
+ * \date 06 avril 2018
+ */
+
 class Map : public sf::Drawable, public sf::Transformable
 {
     public:
 
         //Constructeur
-        Map(Helico&);
-
-        //const int*
-        bool load(const std::string& tileset, sf::Vector2u tileSize, std::vector<int> tiles, unsigned int width, unsigned int height);
+        /*!
+         * \brief Permet d'importer un fichier text avec des nombres. Chaque nombre à l'interieur de ce
+         * fichier correspond à une "tuile" (du TileSet -> importer lors de la creation du jeu).
+         * Cette classe fait la correspondance entre chiffres et image. Elle gere aussi, dans une
+         * methode, les collisions (en retrouvant la position du joueur, puis en checkant le nombre
+         * de la tuile.
+        */
+        Map(Helico&, const char *tileset_filename,
+            sf::Vector2u tileSize,
+            unsigned int width, unsigned int height);
+        /*!
+         * \brief dessine la map
+         * \param target, state
+        */
         virtual void draw(sf::RenderTarget& target, sf::RenderStates state) const;
-        bool indiceTile(std::vector<int> &tabTile, unsigned int t_width, unsigned int t_height);
+        /**
+        * \brief Gestion des collisions en recuperant le nombre correspondant à la tuile.
+        * \return vrai si Tuile considérée comme solide, faux sinon
+        */
+        bool indiceTile();
 
     private:
-        //Variables de la classe en accès privé
-
-        sf::VertexArray m_vertices;
-        sf::Texture m_tileset;
+        sf::VertexArray vertices;
+        sf::Texture tileset;
 
         int tileNumber;
-        int tileNombre[];
-        int i;
-        int j;
+        std::vector<int> tabTile;
 
         Helico& joueur;
-        // fonction TEST
+
 
 
 };
